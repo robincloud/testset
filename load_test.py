@@ -15,7 +15,7 @@ MALL_COUNT = 0
 def load(name):
     data = {}
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    tar = tarfile.open(dir_path + "data/items.json.tar.gz")
+    tar = tarfile.open(dir_path + "/data/items.json.tar.gz")
     for member in tar.getmembers():
         if member.name == name + 'sec.json':
             f = tar.extractfile(member)
