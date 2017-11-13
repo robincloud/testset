@@ -40,7 +40,7 @@ def run(name, thread):
     item_list = load(name)
     print('--- Finish Loading ---')
     print('--- %d items loaded ---' % (item_list.__len__()))
-    pool = Pool(processes=thread)
+    pool = Pool(processes=int(thread))
 
     print('--- Start Sending ---')
     start_time = time.time()
