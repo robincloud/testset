@@ -9,6 +9,7 @@ import tarfile
 from tqdm import tqdm
 
 POST_URL = 'https://robin-api.oneprice.co.kr/items'
+GET_URL = "https://robin-api.oneprice.co.kr/items/query"
 
 
 def load(name):
@@ -40,7 +41,17 @@ def post(data):
     return mall_count
 
 
-def run(name, thread):
+def get(data):
+    mall_count = 0
+    try:
+        requests.get(POST_URL + '/' + data['id'])
+    except Exception as e:
+        print(e)
+        print("failed to send: ", data['mid'])
+    return mall_count
+
+
+def run(name, thread, kind):
     item_list = load(name)
     print('--- Finish Loading ---')
     print('--- %d items loaded ---' % (item_list.__len__()))
@@ -48,7 +59,11 @@ def run(name, thread):
 
     print('--- Start Sending ---')
     start_time = time.time()
-    count_list = pool.map(post, tqdm(item_list))
+    if kind is 'post':
+        count_list = pool.map(post, tqdm(item_list))
+    else:
+        count_list = pool.map(get, tqdm(item_list))
+
     print("--- %s seconds ---" % (time.time() - start_time))
     item_count = 0
     mall_count = 0
@@ -56,14 +71,14 @@ def run(name, thread):
         item_count += 1
         mall_count += item
     print("--- Items: %d, Malls: %d ---" % (item_count, mall_count))
-    a=1
 
 
 if __name__ == '__main__':
     file_name = '10'
     thread = 10
+    kind = 'post'
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "s:t:", ["sec=", "thread="])
+        opts, args = getopt.getopt(sys.argv[1:], "k:s:t:", ["kind=", "sec=", "thread="])
     except getopt.GetoptError as err:
         print(str(err))
         sys.exit(2)
@@ -72,6 +87,8 @@ if __name__ == '__main__':
             file_name = a
         elif o in ("-t", "--thread"):
             thread = a
+        elif o in ("-k", "--kind"):
+            kine = a
         else:
             assert False, "unhandled option"
-    run(file_name, thread)
+    run(file_name, thread, kind)
