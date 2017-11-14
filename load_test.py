@@ -6,6 +6,7 @@ import requests
 import os
 import sys
 import tarfile
+from tqdm import tqdm
 
 POST_URL = 'https://robin-api.oneprice.co.kr/items'
 
@@ -32,7 +33,7 @@ def post(data):
     try:
         requests.post(POST_URL, json=data)
         mall_count = data['data'][0]['nodes'].__len__()
-        print('Post success ', data['mid'])
+        # print('Post success ', data['mid'])
     except Exception as e:
         print(e)
         print("failed to send: ", data['mid'])
@@ -47,7 +48,7 @@ def run(name, thread):
 
     print('--- Start Sending ---')
     start_time = time.time()
-    count_list = pool.map(post, item_list)
+    count_list = pool.map(post, tqdm(item_list))
     print("--- %s seconds ---" % (time.time() - start_time))
     item_count = 0
     mall_count = 0
