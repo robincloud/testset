@@ -7,6 +7,7 @@ import os
 import sys
 import tarfile
 from tqdm import tqdm
+import datetime
 
 POST_URL = 'https://robin-api.oneprice.co.kr/items'
 GET_URL = "https://robin-api.oneprice.co.kr/items/query"
@@ -59,11 +60,13 @@ def run(name, thread, kind):
 
     print('--- Start Sending ---')
     start_time = time.time()
+    print(datetime.datetime.now())
     if kind is 'post':
         count_list = pool.map(post, tqdm(item_list))
     else:
         count_list = pool.map(get, tqdm(item_list))
 
+    print(datetime.datetime.now())
     print("--- %s seconds ---" % (time.time() - start_time))
     item_count = 0
     mall_count = 0
