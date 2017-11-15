@@ -45,7 +45,11 @@ def post(data):
 def get(data):
     mall_count = 0
     try:
-        requests.get(POST_URL + '/' + data['id'])
+        url = GET_URL + '/' + data['id'];
+        if data['data'][0]['pkey']:
+            url += '_' + data['data'][0]['pkey']
+        url += "?access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImV0aGFuQHRoZWNvbW1lcmNlLmNvLmtyIiwiaWF0IjoxNTEwMTEyMTc3LCJleHAiOjE1MTI3MDQxNzcsImlzcyI6InRoZWNvbW1lcmNlLmNvLmtyIn0.xflfMQgnKmXwdxM1ewWD3k_kcvdkb6UvTfgSkxHZbks"
+        requests.get(url)
     except Exception as e:
         print(e)
         print("failed to send: ", data['mid'])
@@ -58,7 +62,7 @@ def run(name, thread, kind):
     print('--- %d items loaded ---' % (item_list.__len__()))
     pool = Pool(processes=int(thread))
 
-    print('--- Start Sending ---')
+    print('--- Start Sending ---', kind)
     start_time = time.time()
     print(datetime.datetime.now())
     if kind is 'post':
@@ -91,7 +95,7 @@ if __name__ == '__main__':
         elif o in ("-t", "--thread"):
             thread = a
         elif o in ("-k", "--kind"):
-            kine = a
+            kind = a
         else:
             assert False, "unhandled option"
     run(file_name, thread, kind)
