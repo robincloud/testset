@@ -11,7 +11,7 @@ run script
 $ git cline https://github.com/robincloud/testset
 $ cd testset
 # for example. run 10sec data, with 64 threads.
-$ python3 test_data.py -t 10 -s 64
+$ python3 load_test.py -s 10 -t 64
 ```
 
 
